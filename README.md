@@ -1,6 +1,6 @@
 # PlexHop
 
-Hop straight to **Plex** from the movie sites you already browse. PlexHop is a clean, lightweight Chrome / Brave extension (and Tampermonkey userscript) that adds a one-click link to your Plex server, **Plex Discover**, or Plex search on every film page.
+Hop straight to **Plex** from the movie sites you already browse. PlexHop is a clean, lightweight Chrome / Brave extension that adds a one-click link to your Plex server, **Plex Discover**, or Plex search on every film page.
 
 ![PlexHop](icons/icon128.png)
 
@@ -23,8 +23,6 @@ Hop straight to **Plex** from the movie sites you already browse. PlexHop is a c
 
 ## Install
 
-### Option 1: Chrome / Brave extension
-
 Until PlexHop is on the Chrome Web Store, load it unpacked:
 
 1. Clone this repository:
@@ -35,12 +33,6 @@ Until PlexHop is on the Chrome Web Store, load it unpacked:
 3. Toggle **Developer mode** (top right).
 4. Click **Load unpacked** and select the cloned directory.
 5. Click the PlexHop icon in the toolbar to open settings.
-
-### Option 2: Tampermonkey / Violentmonkey userscript
-
-1. Open your Tampermonkey dashboard and click **Add a new script** (`+`).
-2. Paste the contents of [`letterboxd-to-plex.user.js`](letterboxd-to-plex.user.js) and save (`Ctrl+S` / `Cmd+S`).
-3. (Optional) On a supported site, use the Tampermonkey menu → **"⚙️ Configure Plex Token"** to enter your token.
 
 ---
 
@@ -103,7 +95,6 @@ content.js        Per-site DOM scraping + link injection
 content.css       Injected link styling
 plex-sync.js      Opt-in token auto-sync on app.plex.tv
 popup.html/js/css Settings popup
-letterboxd-to-plex.user.js  Standalone Tampermonkey variant
 generate_icons.py Regenerates the icon PNGs
 ```
 
