@@ -20,6 +20,9 @@
   let isResolving = false;
   let injectScheduled = false;
   let lastSettings = null;
+  // The display state for the current film, kept across dynamic re-renders so a
+  // mid-resolve "Checking…" (or the final result) survives the page mutating.
+  let displayState = null; // { token, url, type, serverName }
 
   // ---------------------------------------------------------------------------
   // Shared helpers (used by every adapter)
@@ -56,6 +59,7 @@
   }
 
   function badgeLabelFor(type) {
+    if (type === 'checking') return 'Checking…';
     if (type === 'server') return 'On Server';
     if (type === 'discover') return 'Discover';
     return 'Search';
@@ -409,6 +413,19 @@
   // Engine
   // ---------------------------------------------------------------------------
 
+  function currentFilmToken() {
+    const adapter = getActiveAdapter();
+    return adapter ? `${adapter.id}|${adapter.getKey()}` : null;
+  }
+
+  // Re-apply the stored display state to whatever links are currently in the
+  // page — but only if it still describes the film on screen.
+  function applyDisplayState(token) {
+    if (displayState && displayState.token === token) {
+      updateAllInjectedLinks(displayState.url, displayState.type, displayState.serverName);
+    }
+  }
+
   async function injectPlexLinks() {
     const adapter = getActiveAdapter();
     if (!adapter) return;
@@ -418,6 +435,7 @@
 
     const settings = await getSettings();
     const filmKey = adapter.getKey();
+    const filmToken = `${adapter.id}|${filmKey}`;
 
     let activeType = 'search';
     let activeUrl = getSearchUrl(movie.title, movie.year);
@@ -428,33 +446,55 @@
       activeType = cached.type || 'discover';
     }
 
-    adapter.inject(activeUrl, settings, activeType);
+    // Seed the display state for this film (unless we already have one, e.g. a
+    // resolve is mid-flight and we're just re-rendering).
+    if (!displayState || displayState.token !== filmToken) {
+      displayState = { token: filmToken, url: activeUrl, type: activeType };
+    }
+
+    adapter.inject(displayState.url, settings, displayState.type);
+    applyDisplayState(filmToken);
 
     // Resolve the real destination via the background worker if not cached.
     if (!cached && settings.plexToken && !isResolving) {
       isResolving = true;
+      displayState = { token: filmToken, url: activeUrl, type: 'checking' };
+      applyDisplayState(filmToken);
       try {
         const resolved = await chrome.runtime.sendMessage({ action: 'resolveMovie', movie });
         if (resolved && resolved.url && !resolved.error) {
           setCachedResult(adapter.id, filmKey, resolved);
-          updateAllInjectedLinks(resolved.url, resolved.type, resolved.serverName);
+          if (currentFilmToken() === filmToken) {
+            displayState = { token: filmToken, url: resolved.url, type: resolved.type, serverName: resolved.serverName };
+          }
+        } else if (currentFilmToken() === filmToken) {
+          displayState = { token: filmToken, url: activeUrl, type: 'search' };
         }
       } catch (e) {
         console.warn('[PlexHop] Resolve failed:', e);
+        if (currentFilmToken() === filmToken) {
+          displayState = { token: filmToken, url: activeUrl, type: 'search' };
+        }
       } finally {
         isResolving = false;
+        applyDisplayState(filmToken);
       }
     }
   }
 
   function updateAllInjectedLinks(url, type, serverName) {
+    const checking = type === 'checking';
+
     document.querySelectorAll(`.${LINK_CLASS}`).forEach((el) => {
-      el.href = url;
-      if (type === 'server') {
-        el.classList.add('on-server');
-        if (serverName) el.title = `Watch on Plex Server (${serverName})`;
+      if (url) el.href = url;
+      el.classList.toggle('on-server', type === 'server');
+      el.classList.toggle('plexhop-checking', checking);
+      if (type === 'server' && serverName) {
+        el.title = `Watch on Plex Server (${serverName})`;
+      } else if (checking) {
+        el.title = 'Checking Plex…';
       } else {
-        el.classList.remove('on-server');
+        el.title = 'Open in Plex';
       }
     });
 
@@ -466,6 +506,7 @@
     const watchBadge = document.getElementById('service-plex-discover');
     if (watchBadge) {
       watchBadge.classList.toggle('on-server', type === 'server');
+      watchBadge.classList.toggle('plexhop-checking', checking);
     }
   }
 

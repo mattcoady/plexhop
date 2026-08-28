@@ -30,6 +30,22 @@
   box-shadow: 0 0 8px rgba(0, 224, 84, 0.5), inset 0 0 0 1.5px #00e054;
 }
 
+/* "Checking…" state while the server/Discover lookup is in flight */
+.plex-badge-mode.checking {
+  background: rgba(229, 160, 13, 0.15);
+  color: #e5a00d;
+  animation: plexhop-pulse 1s ease-in-out infinite;
+}
+
+.plexhop-checking {
+  opacity: 0.7;
+}
+
+@keyframes plexhop-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
 /* Sidebar action button */
 .plex-sidebar-action {
   margin: 10px 0;
