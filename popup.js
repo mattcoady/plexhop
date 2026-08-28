@@ -1,4 +1,4 @@
-// Popup script for Letterboxd to Plex
+// Popup script for PlexHop
 
 document.addEventListener('DOMContentLoaded', () => {
   const tokenInput = document.getElementById('plexToken');

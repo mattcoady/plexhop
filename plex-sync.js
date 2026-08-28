@@ -15,11 +15,11 @@
         const token = localStorage.getItem('myPlexAccessToken');
         if (token && items.plexToken !== token) {
           chrome.storage.local.set({ plexToken: token }, () => {
-            console.log('[Letterboxd-Plex] Plex token auto-synced from app.plex.tv');
+            console.log('[PlexHop] Plex token auto-synced from app.plex.tv');
           });
         }
       } catch (e) {
-        console.warn('[Letterboxd-Plex] Could not read Plex token:', e);
+        console.warn('[PlexHop] Could not read Plex token:', e);
       }
     });
   }

@@ -1,4 +1,4 @@
-// Letterboxd to Plex - Background Service Worker
+// PlexHop - Background Service Worker
 // All Plex API calls happen here (not in content scripts) so the extension
 // only needs narrow host permissions for Plex's own domains.
 
@@ -32,11 +32,11 @@ async function getPlexHeaders(token) {
     'Accept': 'application/json',
     'X-Plex-Token': token,
     'X-Plex-Client-Identifier': await getClientId(),
-    'X-Plex-Product': 'Letterboxd to Plex',
+    'X-Plex-Product': 'PlexHop',
     'X-Plex-Version': chrome.runtime.getManifest().version,
     'X-Plex-Platform': 'Browser',
     'X-Plex-Device': 'Desktop',
-    'X-Plex-Device-Name': 'Letterboxd Extension'
+    'X-Plex-Device-Name': 'PlexHop'
   };
 }
 
@@ -86,7 +86,7 @@ async function getUserServers(token) {
       }
     }
   } catch (e) {
-    console.warn('[Letterboxd-Plex] Error fetching user servers:', e);
+    console.warn('[PlexHop] Error fetching user servers:', e);
   }
   return [];
 }
@@ -229,7 +229,7 @@ async function fetchPlexDiscoverRatingKey(title, year, token, imdbId) {
       // No confident match in this response; deliberately no first-item
       // fallback — a wrong deep link is worse than falling back to search.
     } catch (e) {
-      console.warn('[Letterboxd-Plex] Discover fetch failed:', e);
+      console.warn('[PlexHop] Discover fetch failed:', e);
     }
   }
 
@@ -292,7 +292,7 @@ async function testToken(token) {
       }
     }
   } catch (err) {
-    console.warn('[Letterboxd-Plex] Resources fetch error:', err);
+    console.warn('[PlexHop] Resources fetch error:', err);
   }
 
   return { ok: true, username, serverNames };

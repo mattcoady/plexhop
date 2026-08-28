@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Letterboxd to Plex (Server & Discover)
+// @name         PlexHop (Letterboxd to Plex)
 // @namespace    https://letterboxd.com/
 // @version      1.4.0
 // @description  Adds direct links to your Plex Server (if in library) or Plex Discover on Letterboxd film pages with configurable display locations.
@@ -27,10 +27,10 @@
       const token = localStorage.getItem('myPlexAccessToken');
       if (token) {
         GM_setValue('plexToken', token);
-        console.log('[Letterboxd-Plex] Plex token auto-captured from app.plex.tv!');
+        console.log('[PlexHop] Plex token auto-captured from app.plex.tv!');
       }
     } catch (e) {
-      console.warn('[Letterboxd-Plex] Auto-sync error:', e);
+      console.warn('[PlexHop] Auto-sync error:', e);
     }
     return;
   }
@@ -199,11 +199,11 @@
       'Accept': 'application/json',
       'X-Plex-Token': token,
       'X-Plex-Client-Identifier': getClientId(),
-      'X-Plex-Product': 'Letterboxd to Plex',
+      'X-Plex-Product': 'PlexHop',
       'X-Plex-Version': '1.4.0',
       'X-Plex-Platform': 'Browser',
       'X-Plex-Device': 'Desktop',
-      'X-Plex-Device-Name': 'Letterboxd Extension'
+      'X-Plex-Device-Name': 'PlexHop'
     };
   }
 
@@ -286,7 +286,7 @@
         }
       }
     } catch (e) {
-      console.warn('[Letterboxd-Plex] Cache read error:', e);
+      console.warn('[PlexHop] Cache read error:', e);
     }
     return null;
   }
@@ -298,7 +298,7 @@
         timestamp: Date.now()
       }));
     } catch (e) {
-      console.warn('[Letterboxd-Plex] Cache write error:', e);
+      console.warn('[PlexHop] Cache write error:', e);
     }
   }
 

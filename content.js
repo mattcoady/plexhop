@@ -1,4 +1,4 @@
-// Letterboxd to Plex - Content Script
+// PlexHop - Content Script
 // Injects Plex links into Letterboxd film pages. All Plex API calls are
 // delegated to the background service worker; this script only touches the DOM.
 (function () {
@@ -189,7 +189,7 @@
           updateAllInjectedLinks(resolved.url, resolved.type, resolved.serverName);
         }
       } catch (e) {
-        console.warn('[Letterboxd-Plex] Resolve failed:', e);
+        console.warn('[PlexHop] Resolve failed:', e);
       } finally {
         isResolving = false;
       }

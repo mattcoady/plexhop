@@ -1,8 +1,8 @@
-# Privacy Policy — Letterboxd to Plex
+# Privacy Policy — PlexHop
 
 _Last updated: August 27, 2026_
 
-**Letterboxd to Plex** is a browser extension that adds links to Plex on Letterboxd film pages. It is designed to collect as little data as possible, and nothing it handles ever leaves your device except requests made directly to Plex's own services.
+**PlexHop** is a browser extension that adds links to Plex on movie pages (currently Letterboxd, with more sources planned). It is designed to collect as little data as possible, and nothing it handles ever leaves your device except requests made directly to Plex's own services.
 
 ## What the extension stores
 
