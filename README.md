@@ -29,7 +29,7 @@ Until PlexHop is on the Chrome Web Store, load it unpacked:
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/mattcoady/letterboxd-to-plex.git
+   git clone https://github.com/mattcoady/plexhop.git
    ```
 2. Open the extensions page — `chrome://extensions` (Chrome) or `brave://extensions` (Brave).
 3. Toggle **Developer mode** (top right).
