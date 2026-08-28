@@ -1,0 +1,54 @@
+{
+  "manifest_version": 3,
+  "name": "Letterboxd to Plex",
+  "version": "1.4.0",
+  "description": "Adds direct Plex Server and Discover links to movie pages on Letterboxd. Unofficial; not affiliated with Letterboxd or Plex.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Letterboxd to Plex Settings",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://plex.tv/*",
+    "https://discover.provider.plex.tv/*",
+    "https://*.plex.direct/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://letterboxd.com/film/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://app.plex.tv/*"
+      ],
+      "js": [
+        "plex-sync.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

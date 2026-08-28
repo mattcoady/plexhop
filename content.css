@@ -1,0 +1,139 @@
+/* Letterboxd to Plex styling */
+
+/* Plex streaming service badge in the Where to Watch section */
+.service.-plex .brand {
+  background-color: #1f2326 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 3px !important;
+  position: relative;
+}
+
+.service.-plex .brand svg {
+  width: 20px;
+  height: 20px;
+  fill: #e5a00d;
+}
+
+.service.-plex:hover .brand {
+  background-color: #2b3035 !important;
+  box-shadow: 0 0 6px rgba(229, 160, 13, 0.4);
+}
+
+/* On-server green indicator on service badge */
+.service.-plex.on-server .brand {
+  box-shadow: inset 0 0 0 1.5px #00e054;
+}
+
+.service.-plex.on-server:hover .brand {
+  box-shadow: 0 0 8px rgba(0, 224, 84, 0.5), inset 0 0 0 1.5px #00e054;
+}
+
+/* Sidebar action button */
+.plex-sidebar-action {
+  margin: 10px 0;
+}
+
+.plex-sidebar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #1f252b 0%, #151a1e 100%);
+  border: 1px solid #303840;
+  border-radius: 4px;
+  color: #cdd;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none !important;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.plex-sidebar-btn:hover {
+  background: linear-gradient(135deg, #2b333c 0%, #1f262d 100%);
+  border-color: #e5a00d;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(229, 160, 13, 0.25);
+}
+
+.plex-sidebar-btn.on-server {
+  border-color: rgba(0, 224, 84, 0.4);
+}
+
+.plex-sidebar-btn.on-server:hover {
+  border-color: #00e054;
+  box-shadow: 0 2px 8px rgba(0, 224, 84, 0.3);
+}
+
+.plex-sidebar-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: #e5a00d;
+  flex-shrink: 0;
+}
+
+.plex-sidebar-btn .plex-badge-mode {
+  margin-left: auto;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 5px;
+  background: rgba(229, 160, 13, 0.15);
+  color: #e5a00d;
+  border-radius: 3px;
+}
+
+.plex-sidebar-btn .plex-badge-mode.server {
+  background: rgba(0, 224, 84, 0.15);
+  color: #00e054;
+}
+
+.plex-sidebar-btn .plex-badge-mode.discover {
+  background: rgba(229, 160, 13, 0.15);
+  color: #e5a00d;
+}
+
+.plex-sidebar-btn .plex-badge-mode.search {
+  background: rgba(100, 120, 140, 0.2);
+  color: #89a;
+}
+
+/* Header metadata link */
+.plex-meta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+  padding: 2px 6px;
+  background: #1c2127;
+  border: 1px solid #2d353f;
+  border-radius: 3px;
+  color: #9ab;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none !important;
+  vertical-align: middle;
+  transition: all 0.2s;
+}
+
+.plex-meta-link:hover {
+  color: #fff;
+  border-color: #e5a00d;
+  background: #252c34;
+}
+
+.plex-meta-link.on-server {
+  border-color: rgba(0, 224, 84, 0.5);
+  color: #00e054;
+}
+
+.plex-meta-link svg {
+  width: 12px;
+  height: 12px;
+  fill: #e5a00d;
+}

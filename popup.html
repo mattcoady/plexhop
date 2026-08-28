@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Letterboxd to Plex Settings</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="header">
+    <div class="logo-container">
+      <svg class="plex-logo" viewBox="0 0 24 24">
+        <path d="M3.5 2.5h6l8.5 9.5-8.5 9.5h-6l8.5-9.5L3.5 2.5z"/>
+      </svg>
+      <h2>Letterboxd &rarr; Plex</h2>
+    </div>
+    <span class="version" id="versionLabel"></span>
+  </div>
+
+  <div class="content">
+    <div class="form-group">
+      <label for="plexToken">
+        Plex Token <span>(Optional)</span>
+      </label>
+      <input type="password" id="plexToken" placeholder="Paste your X-Plex-Token here..." autocomplete="off">
+      <small class="hint">
+        Enables direct deep-linking to your <strong>personal server library</strong> or <strong>Plex Discover</strong>.
+        Stored only on this device and only ever sent to Plex.
+      </small>
+    </div>
+
+    <div class="form-group checkbox-group">
+      <label>
+        <input type="checkbox" id="autoSyncToken">
+        Auto-sync token from app.plex.tv
+      </label>
+      <small class="hint">
+        When enabled, the extension reads your Plex token from your own signed-in
+        <strong>app.plex.tv</strong> session and fills it in above automatically.
+        Off by default.
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="preferredMode">Link Destination Priority</label>
+      <select id="preferredMode">
+        <option value="server_first">⭐ Smart (Your Server first, fallback to Discover)</option>
+        <option value="discover_only">Plex Discover Only</option>
+        <option value="server_only">Your Server Only</option>
+        <option value="search_only">Universal Search</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Display Locations</label>
+      <div class="checkbox-list">
+        <label class="checkbox-item">
+          <input type="checkbox" id="showSidebarButton" checked>
+          <span>Sidebar ("Open in Plex" action button)</span>
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="showWatchPanel" checked>
+          <span>"Where to Watch" section (Streaming badge)</span>
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="showDetailsLink" checked>
+          <span>Details tab (Beside IMDb / TMDb links)</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="form-group checkbox-group">
+      <label>
+        <input type="checkbox" id="openInNewTab" checked>
+        Open Plex links in a new tab
+      </label>
+    </div>
+
+    <div class="actions-row">
+      <button id="testBtn" class="btn secondary">Test Token & Server</button>
+      <button id="saveBtn" class="btn primary">Save Settings</button>
+    </div>
+
+    <div id="statusMessage" class="status-msg"></div>
+
+    <hr class="divider">
+
+    <div class="footer-links">
+      <button id="clearCacheBtn" class="link-btn">Clear Cached Film IDs</button>
+      <a href="https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/" target="_blank" rel="noopener noreferrer">How to find your Token &rarr;</a>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
