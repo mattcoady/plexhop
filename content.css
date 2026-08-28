@@ -127,6 +127,7 @@
   align-items: center;
   gap: 8px;
   margin-top: 12px;
+  margin-bottom: 10px;
   min-height: 36px;
   padding: 0 14px;
   box-sizing: border-box;
@@ -185,6 +186,32 @@
 .plexhop-imdb-btn .plex-badge-mode.checking {
   background: rgba(245, 197, 24, 0.18);
   color: #f5c518;
+}
+
+/* Light variant for IMDb's white "Reference view" */
+.plexhop-imdb-btn--light {
+  background: rgba(0, 0, 0, 0.06);
+  color: #16181c;
+}
+
+.plexhop-imdb-btn--light:hover {
+  background: rgba(0, 0, 0, 0.11);
+}
+
+.plexhop-imdb-btn--light .plex-badge-mode {
+  background: rgba(0, 0, 0, 0.08);
+  color: #55606b;
+}
+
+.plexhop-imdb-btn--light .plex-badge-mode.server {
+  background: rgba(0, 160, 60, 0.15);
+  color: #0a7d33;
+}
+
+.plexhop-imdb-btn--light .plex-badge-mode.discover,
+.plexhop-imdb-btn--light .plex-badge-mode.checking {
+  background: rgba(200, 140, 0, 0.16);
+  color: #8a6100;
 }
 
 /* Header metadata link */

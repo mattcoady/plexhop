@@ -16,7 +16,7 @@ Hop straight to **Plex** from the movie sites you already browse. PlexHop is a c
   - On **Letterboxd** film pages — a Plex badge in the "Where to watch" panel, an "Open in Plex" button in the sidebar, and a Plex link beside the IMDb / TMDb links.
   - On **IMDb** title pages — an "Open in Plex" button under the title.
 - **Smart link destinations** — with an optional Plex token, links deep-link straight to the film **on your own Plex server** if it's in your library, falling back to the film's **Plex Discover** page. Without a token, links open Plex search — zero setup required.
-- **Accurate matching** — films are matched by IMDb ID when available, with title + year as fallback. No confident match means a search link, never a wrong film.
+- **Movies and TV** — matches both films and TV shows / mini-series (anything with an IMDb ID on the page), by IMDb ID when available, with title + year as fallback. No confident match means a search link, never a wrong title.
 - **Fast** — resolved links are cached for 7 days, so revisiting a film makes zero network calls.
 - **SPA-friendly** — links survive dynamic page updates and back/forward navigation.
 - **Private by design** — no analytics, no tracking, no third-party servers. Your Plex token stays on your device and is only ever sent to Plex's own APIs, always as a header. See [PRIVACY.md](PRIVACY.md).
@@ -69,7 +69,7 @@ Use **Test Token & Server** in the popup to verify it works — it shows your ac
 
 - A content script reads the film's title, year, and IMDb/TMDb IDs from the page and injects the links.
 - All Plex API calls happen in the background service worker, which only has permission for Plex's own domains (`plex.tv`, `discover.provider.plex.tv`, `*.plex.direct`).
-- With a token, it searches your servers' libraries (`/hubs/search`) and Plex Discover, matching by IMDb ID first, then normalized title + year (±1).
+- With a token, it searches your servers' libraries (`/hubs/search`) and Plex Discover across both movie and TV-show types, matching by IMDb ID first, then normalized title + year (±1).
 - Results are cached locally for 7 days (clearable from the popup).
 
 Adding a new source (IMDb, TMDB, …) means teaching the content script how to scrape a title/year/IMDb-ID from that site and adding its match pattern to the manifest — the resolution and linking logic in the background worker stays the same.

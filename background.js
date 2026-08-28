@@ -91,14 +91,19 @@ async function getUserServers(token) {
   return [];
 }
 
-// 2. Search the user's personal servers for the movie
-async function searchUserServers(title, year, token, imdbId) {
+// 2. Search the user's personal servers for the movie or show
+async function searchUserServers(title, year, token, imdbId, mediaType) {
   const servers = await getUserServers(token);
   if (!servers || servers.length === 0) return null;
 
   const cleanTitle = sanitizeText(title);
   const normTargetTitle = normalize(cleanTitle);
   const targetYear = parseInt(year, 10);
+  // Which Plex item types are acceptable. mediaType is a soft hint ('movie'
+  // | 'show' | '' unknown); IMDb-ID matches are always accepted regardless.
+  const allowedTypes = mediaType === 'show' ? ['show']
+    : mediaType === 'movie' ? ['movie']
+    : ['movie', 'show'];
 
   for (const server of servers) {
     const serverToken = server.accessToken || token;
@@ -133,14 +138,14 @@ async function searchUserServers(title, year, token, imdbId) {
         }
         if (Array.isArray(data.MediaContainer?.Hub)) {
           for (const hub of data.MediaContainer.Hub) {
-            if (hub.type === 'movie' && Array.isArray(hub.Metadata)) {
+            if ((hub.type === 'movie' || hub.type === 'show') && Array.isArray(hub.Metadata)) {
               items.push(...hub.Metadata);
             }
           }
         }
 
         for (const item of items) {
-          if (item.type !== 'movie') continue;
+          if (item.type !== 'movie' && item.type !== 'show') continue;
 
           const itemTitleNorm = normalize(item.title || '');
           const itemYear = parseInt(item.year, 10);
@@ -150,7 +155,10 @@ async function searchUserServers(title, year, token, imdbId) {
             (Array.isArray(item.Guid) && item.Guid.some(g => g.id && g.id.includes(imdbId)))
           );
 
-          const titleMatch = (itemTitleNorm === normTargetTitle) &&
+          // Title fallback must be the right kind of item (when we know it),
+          // so a same-named movie can't shadow the show we're after.
+          const titleMatch = allowedTypes.includes(item.type) &&
+            (itemTitleNorm === normTargetTitle) &&
             (!targetYear || !itemYear || Math.abs(itemYear - targetYear) <= 1);
 
           if (imdbMatch || titleMatch) {
@@ -176,15 +184,22 @@ async function searchUserServers(title, year, token, imdbId) {
   return null;
 }
 
-// 3. Search the Discover API for the movie
-async function fetchPlexDiscoverRatingKey(title, year, token, imdbId) {
+// 3. Search the Discover API for the movie or show
+async function fetchPlexDiscoverRatingKey(title, year, token, imdbId, mediaType) {
   const cleanTitle = sanitizeText(title);
   const normTargetTitle = normalize(cleanTitle);
   const targetYear = parseInt(year, 10);
   const headers = await getPlexHeaders(token);
 
+  // Plex Discover types: 1 = movie, 2 = show. When we don't know, try both.
+  const matchTypes = mediaType === 'show' ? [2]
+    : mediaType === 'movie' ? [1]
+    : [1, 2];
+  const matchUrl = (t) =>
+    `https://discover.provider.plex.tv/library/metadata/matches?manual=1&title=${encodeURIComponent(cleanTitle)}&year=${encodeURIComponent(year || '')}&type=${t}`;
+
   const candidateUrls = [
-    `https://discover.provider.plex.tv/library/metadata/matches?manual=1&title=${encodeURIComponent(cleanTitle)}&year=${encodeURIComponent(year || '')}&type=1`,
+    ...matchTypes.map(matchUrl),
     `https://discover.provider.plex.tv/library/search?query=${encodeURIComponent(cleanTitle)}&limit=10`
   ];
 
@@ -242,7 +257,7 @@ async function resolveMovie(movie) {
   const preferredMode = settings.preferredMode || 'server_first';
 
   if (plexToken && preferredMode !== 'discover_only' && preferredMode !== 'search_only') {
-    const serverMatch = await searchUserServers(movie.title, movie.year, plexToken, movie.imdbId);
+    const serverMatch = await searchUserServers(movie.title, movie.year, plexToken, movie.imdbId, movie.type);
     if (serverMatch) return serverMatch;
     if (preferredMode === 'server_only') {
       return { type: 'search', url: getSearchUrl(movie.title, movie.year) };
@@ -250,7 +265,7 @@ async function resolveMovie(movie) {
   }
 
   if (plexToken && preferredMode !== 'search_only') {
-    const discoverKey = await fetchPlexDiscoverRatingKey(movie.title, movie.year, plexToken, movie.imdbId);
+    const discoverKey = await fetchPlexDiscoverRatingKey(movie.title, movie.year, plexToken, movie.imdbId, movie.type);
     if (discoverKey) {
       return {
         type: 'discover',

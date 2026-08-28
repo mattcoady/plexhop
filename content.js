@@ -104,6 +104,26 @@
     return link;
   }
 
+  // Walk up from an element to the first opaque background and decide whether
+  // it's light. Used so the IMDb button stays readable on the white
+  // "Reference view" as well as the standard dark title pages.
+  function isLightBackground(el) {
+    let node = el;
+    for (let i = 0; node && i < 12; i++) {
+      const bg = getComputedStyle(node).backgroundColor;
+      const m = bg && bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+      if (m) {
+        const alpha = m[4] === undefined ? 1 : parseFloat(m[4]);
+        if (alpha > 0.1) {
+          const lum = (0.299 * +m[1] + 0.587 * +m[2] + 0.114 * +m[3]) / 255;
+          return lum > 0.6;
+        }
+      }
+      node = node.parentElement;
+    }
+    return false; // default to the dark treatment
+  }
+
   function readImdbIdFromLinks() {
     const imdbLink = document.querySelector('a[href*="imdb.com/title/"]');
     if (imdbLink) {
@@ -298,6 +318,7 @@
 
       let title = '';
       let year = '';
+      let ldType = '';
 
       // Primary: JSON-LD is clean and locale-independent.
       for (const script of document.querySelectorAll('script[type="application/ld+json"]')) {
@@ -306,6 +327,7 @@
           const node = Array.isArray(parsed) ? parsed.find(d => d && d.name) : parsed;
           if (node && typeof node.name === 'string' && node.name) {
             title = sanitizeText(node.name);
+            if (typeof node['@type'] === 'string') ldType = node['@type'];
             if (typeof node.datePublished === 'string' && /^\d{4}/.test(node.datePublished)) {
               year = node.datePublished.slice(0, 4);
             }
@@ -332,8 +354,18 @@
       }
 
       title = title.replace(/\s*\(\d{4}\)\s*$/, '').trim();
+
+      // Media type: og:type is present on both the standard and reference
+      // views and is locale-independent; fall back to the JSON-LD @type.
+      const ogType = document.querySelector('meta[property="og:type"]')?.content || '';
+      let type = '';
+      if (ogType === 'video.tv_show') type = 'show';
+      else if (ogType === 'video.movie') type = 'movie';
+      else if (/tv|series|episode/i.test(ldType)) type = 'show';
+      else if (/movie/i.test(ldType)) type = 'movie';
+
       if (!title && !imdbId) return null;
-      return { title, year, imdbId, tmdbId: '' };
+      return { title, year, imdbId, tmdbId: '', type };
     },
 
     inject(url, settings, type) {
@@ -347,6 +379,7 @@
       const btn = createPlexButton(url, settings, type, 'plexhop-imdb-btn');
       btn.id = 'plexhop-imdb-btn';
       btn.classList.add(INJECTED_CLASS);
+      if (isLightBackground(host)) btn.classList.add('plexhop-imdb-btn--light');
       host.appendChild(btn);
     },
 
