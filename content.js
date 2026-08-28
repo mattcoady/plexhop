@@ -337,6 +337,7 @@
     },
 
     inject(url, settings, type) {
+      if (!settings.showImdbButton) return;
       if (document.getElementById('plexhop-imdb-btn')) return;
 
       const h1 = document.querySelector('h1[data-testid="hero__pageTitle"]');
@@ -349,7 +350,8 @@
       host.appendChild(btn);
     },
 
-    isInjected() {
+    isInjected(settings) {
+      if (!settings.showImdbButton) return true; // nothing to inject
       return !!document.getElementById('plexhop-imdb-btn');
     }
   };
@@ -371,14 +373,16 @@
         'openInNewTab',
         'showSidebarButton',
         'showWatchPanel',
-        'showDetailsLink'
+        'showDetailsLink',
+        'showImdbButton'
       ], (items) => {
         lastSettings = {
           plexToken: items.plexToken || '',
           openInNewTab: items.openInNewTab !== false,
           showSidebarButton: items.showSidebarButton !== false,
           showWatchPanel: items.showWatchPanel !== false,
-          showDetailsLink: items.showDetailsLink !== false
+          showDetailsLink: items.showDetailsLink !== false,
+          showImdbButton: items.showImdbButton !== false
         };
         resolve(lastSettings);
       });

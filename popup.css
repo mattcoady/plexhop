@@ -107,6 +107,24 @@ select:focus {
   color: #9ab;
 }
 
+/* Per-site grouping within Display Locations */
+.site-group {
+  margin-top: 8px;
+}
+
+.site-group:first-of-type {
+  margin-top: 0;
+}
+
+.site-group-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #789;
+  margin-bottom: 4px;
+}
+
 /* Checkbox lists */
 .checkbox-list {
   background: #1a2026;

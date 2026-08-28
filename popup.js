@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const showSidebarCheckbox = document.getElementById('showSidebarButton');
   const showWatchPanelCheckbox = document.getElementById('showWatchPanel');
   const showDetailsLinkCheckbox = document.getElementById('showDetailsLink');
+  const showImdbButtonCheckbox = document.getElementById('showImdbButton');
 
   const saveBtn = document.getElementById('saveBtn');
   const testBtn = document.getElementById('testBtn');
@@ -59,7 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
     'preferredMode',
     'showSidebarButton',
     'showWatchPanel',
-    'showDetailsLink'
+    'showDetailsLink',
+    'showImdbButton'
   ], (items) => {
     if (items.plexToken) tokenInput.value = items.plexToken;
     autoSyncCheckbox.checked = items.autoSyncToken === true;
@@ -68,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof items.showSidebarButton !== 'undefined') showSidebarCheckbox.checked = items.showSidebarButton;
     if (typeof items.showWatchPanel !== 'undefined') showWatchPanelCheckbox.checked = items.showWatchPanel;
     if (typeof items.showDetailsLink !== 'undefined') showDetailsLinkCheckbox.checked = items.showDetailsLink;
+    if (typeof items.showImdbButton !== 'undefined') showImdbButtonCheckbox.checked = items.showImdbButton;
   });
 
   // Save settings
@@ -79,7 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
       openInNewTab: newTabCheckbox.checked,
       showSidebarButton: showSidebarCheckbox.checked,
       showWatchPanel: showWatchPanelCheckbox.checked,
-      showDetailsLink: showDetailsLinkCheckbox.checked
+      showDetailsLink: showDetailsLinkCheckbox.checked,
+      showImdbButton: showImdbButtonCheckbox.checked
     }, () => {
       showStatus('✓ Settings saved successfully!', 'success', 3000);
     });
@@ -113,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (result.serverNames && result.serverNames.length > 0) {
           lines.push([{ text: '📡 Detected Server: ' }, { text: result.serverNames.join(', '), strong: true }]);
         }
-        lines.push('✨ Ready to link Letterboxd with Plex!');
+        lines.push('✨ Ready to link your movies with Plex!');
         showStatus(lines, 'success', 8000);
       }
     } catch (e) {
