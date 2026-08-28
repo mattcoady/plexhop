@@ -119,64 +119,72 @@
   color: #89a;
 }
 
-/* IMDb "Open in Plex" button (injected under the title on title pages) */
+/* IMDb "Open in Plex" button — styled to match IMDb's own pill buttons
+   (Roboto, 36px pill, translucent-on-dark) so it reads as native UI. */
 .plexhop-imdb-btn {
-  display: inline-flex;
+  display: flex;
+  width: fit-content;
   align-items: center;
   gap: 8px;
   margin-top: 12px;
-  padding: 8px 14px;
-  background: linear-gradient(135deg, #1f252b 0%, #151a1e 100%);
-  border: 1px solid #303840;
-  border-radius: 6px;
-  color: #e8e8e8;
+  min-height: 36px;
+  padding: 0 14px;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  border-radius: 24px;
+  color: #fff;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
+  line-height: normal;
   text-decoration: none !important;
-  transition: all 0.2s ease-in-out;
+  transition: background 0.2s ease;
   cursor: pointer;
 }
 
 .plexhop-imdb-btn:hover {
-  border-color: #e5a00d;
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(229, 160, 13, 0.25);
-}
-
-.plexhop-imdb-btn.on-server {
-  border-color: rgba(0, 224, 84, 0.5);
-}
-
-.plexhop-imdb-btn.on-server:hover {
-  border-color: #00e054;
-  box-shadow: 0 2px 8px rgba(0, 224, 84, 0.3);
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .plexhop-imdb-btn svg {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   fill: #e5a00d;
   flex-shrink: 0;
 }
 
 .plexhop-imdb-btn .plex-badge-mode {
-  font-size: 10px;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 2px 6px;
-  border-radius: 3px;
-  background: rgba(229, 160, 13, 0.15);
-  color: #e5a00d;
+  letter-spacing: 0.4px;
+  line-height: 1;
+  padding: 3px 7px;
+  border-radius: 12px;
+  background: rgba(229, 160, 13, 0.18);
+  color: #f5c518;
 }
 
 .plexhop-imdb-btn .plex-badge-mode.server {
-  background: rgba(0, 224, 84, 0.15);
-  color: #00e054;
+  background: rgba(0, 224, 84, 0.18);
+  color: #4ee38a;
+}
+
+.plexhop-imdb-btn .plex-badge-mode.discover {
+  background: rgba(229, 160, 13, 0.18);
+  color: #f5c518;
 }
 
 .plexhop-imdb-btn .plex-badge-mode.search {
-  background: rgba(100, 120, 140, 0.2);
-  color: #89a;
+  background: rgba(255, 255, 255, 0.12);
+  color: #cdd;
+}
+
+.plexhop-imdb-btn .plex-badge-mode.checking {
+  background: rgba(245, 197, 24, 0.18);
+  color: #f5c518;
 }
 
 /* Header metadata link */
