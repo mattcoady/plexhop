@@ -4,7 +4,7 @@ Hop straight to **Plex** from the movie sites you already browse. PlexHop is a c
 
 ![PlexHop](icons/icon128.png)
 
-**Supported sources today:** [Letterboxd](https://letterboxd.com). **Planned:** IMDb, TMDB, and TV sites — the architecture is built to add sources without changing how linking works.
+**Supported sources today:** [Letterboxd](https://letterboxd.com), [IMDb](https://www.imdb.com). **Planned:** TMDB and TV sites — the architecture is built to add sources without changing how linking works.
 
 > **Unofficial**: This project is not affiliated with, endorsed by, or sponsored by Plex, Letterboxd, or any other site it links from. "Plex", "Letterboxd", and other names are trademarks of their respective owners.
 
@@ -12,10 +12,9 @@ Hop straight to **Plex** from the movie sites you already browse. PlexHop is a c
 
 ## Features
 
-- **"Open in Plex" everywhere it makes sense** — on a Letterboxd film page, PlexHop adds:
-  - a Plex badge in the **"Where to watch"** panel,
-  - an **"Open in Plex"** action button in the sidebar under the poster,
-  - a quick **Plex** link beside the IMDb / TMDb links.
+- **"Open in Plex" everywhere it makes sense**:
+  - On **Letterboxd** film pages — a Plex badge in the "Where to watch" panel, an "Open in Plex" button in the sidebar, and a Plex link beside the IMDb / TMDb links.
+  - On **IMDb** title pages — an "Open in Plex" button under the title.
 - **Smart link destinations** — with an optional Plex token, links deep-link straight to the film **on your own Plex server** if it's in your library, falling back to the film's **Plex Discover** page. Without a token, links open Plex search — zero setup required.
 - **Accurate matching** — films are matched by IMDb ID when available, with title + year as fallback. No confident match means a search link, never a wrong film.
 - **Fast** — resolved links are cached for 7 days, so revisiting a film makes zero network calls.
@@ -88,7 +87,7 @@ Adding a new source (IMDb, TMDB, …) means teaching the content script how to s
 ## Roadmap
 
 - [x] Letterboxd support
-- [ ] IMDb support
+- [x] IMDb support
 - [ ] TMDB support
 - [ ] TV / show sources
 - [ ] Chrome Web Store listing
@@ -108,7 +107,25 @@ letterboxd-to-plex.user.js  Standalone Tampermonkey variant
 generate_icons.py Regenerates the icon PNGs
 ```
 
-Test on any Letterboxd film page, e.g. [The Dark Knight](https://letterboxd.com/film/the-dark-knight/), [Parasite](https://letterboxd.com/film/parasite-2019/).
+Test on any Letterboxd film page (e.g. [The Dark Knight](https://letterboxd.com/film/the-dark-knight/)) or IMDb title page (e.g. [Inception](https://www.imdb.com/title/tt1375666/)).
+
+### Adding a new source
+
+`content.js` is a site-agnostic engine plus a `SITE_ADAPTERS` registry. To support a new site, add one adapter object and its match pattern — no engine changes:
+
+1. Add an adapter to the `SITE_ADAPTERS` array in [`content.js`](content.js) implementing:
+   | Method | Returns | Purpose |
+   |---|---|---|
+   | `id` | string | Unique key, namespaces the cache |
+   | `isFilmPage()` | boolean | Is the current URL a film page on this site? |
+   | `getKey()` | string | Stable per-film id (used as cache key) |
+   | `extract()` | `{title, year, imdbId, tmdbId}` \| `null` | Scrape the film from the page |
+   | `inject(url, settings, type)` | — | Idempotently place link(s) in the DOM |
+   | `isInjected(settings)` | boolean | Are this site's links already present? |
+2. Add the site's URL pattern to `content_scripts[0].matches` in [`manifest.json`](manifest.json).
+3. (Optional) Add site-specific styling to [`content.css`](content.css).
+
+Injected top-level nodes must carry the `plexhop-injected` class (so the engine can clean them up on navigation); build anchors with the shared `createPlexAnchor` / `createPlexButton` helpers so they get the `plexhop-link` marker and update automatically once resolution completes. The IMDb adapter is a minimal reference; the Letterboxd adapter shows multiple placements.
 
 ### Packaging for the Chrome Web Store
 
